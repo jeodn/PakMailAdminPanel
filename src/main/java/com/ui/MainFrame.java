@@ -1,5 +1,8 @@
 package com.ui;
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.model.Customer;
 
 import javax.swing.*;
@@ -13,14 +16,20 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         super("Mailbox Admin Dashboard");
+
+        try {
+            UIManager.setLookAndFeel( new FlatIntelliJLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 500);
 
         // Dummy data – replace with DB call
         List<Customer> customers = Arrays.asList(
-                new Customer(1, "Alice Smith",  "alice@example.com"),
-                new Customer(2, "Bob Johnson", "bob@example.com"),
-                new Customer(3, "Carol Lin",   "carol@example.com")
+                new Customer(1, "Josh Drake",  "joshdrvillas@gmail.com"),
+                new Customer(2, "Acid Joshton", "acidjoshton@gmail.com")
         );
 
         detailPanel = new CustomerDetailPanel(() -> openNotifyDialog());
@@ -38,7 +47,7 @@ public class MainFrame extends JFrame {
     private void openNotifyDialog() {
         Customer c = listPanel.getSelectedCustomer();
         if (c == null) return;
-        NotifyCustomerDialog dlg = new NotifyCustomerDialog(this);
+        NotifyCustomerDialog dlg = new NotifyCustomerDialog(this, c);
         dlg.setTitle("Notify " + c.getName());
         dlg.setVisible(true);
         // On success, you’ll probably fire off an email / API call here.

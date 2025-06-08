@@ -3,13 +3,11 @@ package com.ui;
 import com.model.Customer;
 import com.util.ImageUtils;
 import com.util.Emailer;
-import jakarta.mail.MessagingException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 public class NotifyCustomerDialog extends JDialog {
     private final JComboBox<String> typeBox =
@@ -19,9 +17,13 @@ public class NotifyCustomerDialog extends JDialog {
     private final JButton chooseImgBtn = new JButton("Choose Image…");
     private final JButton sendBtn = new JButton("Send");
     private File          selectedImage;           // keep for “Send”
+    private Customer selectedCustomer;     // the customer
 
-    public NotifyCustomerDialog(Frame owner) {
+    public NotifyCustomerDialog(Frame owner, Customer selectedCustomer) {
         super(owner, "Notify Customer", true);
+
+        this.selectedCustomer = selectedCustomer;
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4,4,4,4);
@@ -87,7 +89,9 @@ public class NotifyCustomerDialog extends JDialog {
         sendBtn.addActionListener(e -> {
             try {
                 System.out.println("made it here");
-                Emailer.sendEmailWithAttachment(selectedImage, selectedImage.getName());
+
+                // Emailer
+                Emailer.sendEmailWithAttachment(selectedImage, selectedImage.getName(), selectedCustomer.getEmail());
                 JOptionPane.showMessageDialog(this, "Email sent successfully!");
             } catch (Exception ex) {
                 ex.printStackTrace();

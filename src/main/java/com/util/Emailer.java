@@ -1,16 +1,7 @@
 package com.util;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Properties;
-import java.util.Optional;
 import java.io.File;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -28,9 +19,6 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Emailer.java
@@ -94,7 +82,7 @@ public class Emailer {
     // ─────────────────────────────────────────────────────────────────
     // Send an email with the specified attachment using Jakarta Mail
     // ─────────────────────────────────────────────────────────────────
-    public static void sendEmailWithAttachment(File attachmentFile, String originalFileName)
+    public static void sendEmailWithAttachment(File attachmentFile, String originalFileName, String recipientEmail)
             throws MessagingException, IOException
     {
         // TODO: Perhaps add try-catch statement to handle error? Or should it be handled externally?
@@ -123,7 +111,7 @@ public class Emailer {
         message.setFrom(new InternetAddress(EMAIL_ADDRESS));
         message.setRecipients(
                 Message.RecipientType.TO,
-                InternetAddress.parse(RECIPIENT_EMAIL, false)
+                InternetAddress.parse(recipientEmail, false)
         );
         message.setSubject("📬 Your Mail Photo");
 
@@ -131,8 +119,8 @@ public class Emailer {
         MimeBodyPart textPart = new MimeBodyPart();
         StringBuilder bodyBuilder = new StringBuilder()
                 .append("Hello,\n\n")
-                .append("Here is one of your mail photos:\n\n")
-                .append("Filename: ").append(originalFileName).append("\n\n")
+                .append("A new package has arrived at your mailbox.\n\n")
+                //.append("Filename: ").append(originalFileName).append("\n\n")
                 .append("Best,\n")
                 .append("Your Virtual Mailbox System");
         textPart.setText(bodyBuilder.toString());
