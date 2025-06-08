@@ -1,10 +1,11 @@
-package ui;
+package com.ui;
+
+import com.model.Customer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.List;
-import model.Customer;
 
 public class CustomerListPanel extends JPanel {
     private final JTable table;

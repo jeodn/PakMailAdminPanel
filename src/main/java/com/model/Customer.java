@@ -1,4 +1,4 @@
-package model;
+package com.model;
 
 public final class Customer {
     private final int id;

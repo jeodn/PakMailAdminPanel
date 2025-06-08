@@ -1,6 +1,6 @@
-package ui;
+package com.ui;
 
-import model.Customer;
+import com.model.Customer;
 
 import javax.swing.*;
 import java.awt.*;
