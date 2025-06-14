@@ -79,6 +79,11 @@ public class Emailer {
         }
     }
 
+    // TODO: Remove originalFileName from method
+    public static void sendEmailWithAttachment(File attachmentFile, String recipientEmail) throws MessagingException, IOException {
+        sendEmailWithAttachment(attachmentFile, "Lorem ipsum", recipientEmail);
+    }
+
     // ─────────────────────────────────────────────────────────────────
     // Send an email with the specified attachment using Jakarta Mail
     // ─────────────────────────────────────────────────────────────────

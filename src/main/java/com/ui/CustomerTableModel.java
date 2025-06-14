@@ -1,6 +1,6 @@
 package com.ui;
 
-import com.model.Customer;
+import com.entities.Customer;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;

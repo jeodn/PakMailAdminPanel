@@ -1,8 +1,9 @@
 package com.ui;
 
-import com.model.Customer;
+import com.entities.Customer;
+import com.interfaceadapters.CustomerListPresenter;
+import com.interfaceadapters.NotifyMailController;
 import com.util.ImageUtils;
-import com.util.Emailer;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -10,17 +11,22 @@ import java.awt.*;
 import java.io.File;
 
 public class NotifyCustomerDialog extends JDialog {
+    private final NotifyMailController controller;
+    private final CustomerListPresenter presenter;
     private final JComboBox<String> typeBox =
             new JComboBox<>(new String[]{"Envelope", "Parcel", "Other"});
-    private final JTextField weightField = new JTextField(8);
+    private final JTextField senderField = new JTextField(8);
+    private final JTextField descriptionField = new JTextField(8);
     private final JLabel imgPreview = new JLabel();
     private final JButton chooseImgBtn = new JButton("Choose Image…");
     private final JButton sendBtn = new JButton("Send");
     private File          selectedImage;           // keep for “Send”
     private Customer selectedCustomer;     // the customer
 
-    public NotifyCustomerDialog(Frame owner, Customer selectedCustomer) {
+    public NotifyCustomerDialog(Frame owner, NotifyMailController controller, CustomerListPresenter presenter, Customer selectedCustomer) {
         super(owner, "Notify Customer", true);
+        this.controller = controller;
+        this.presenter = presenter;
 
         this.selectedCustomer = selectedCustomer;
 
@@ -33,15 +39,19 @@ public class NotifyCustomerDialog extends JDialog {
         gbc.gridx = 0; gbc.gridy = 0; add(new JLabel("Type:"), gbc);
         gbc.gridx = 1; add(typeBox, gbc);
 
-        // Weight
-        gbc.gridx = 0; gbc.gridy = 1; add(new JLabel("Weight (g):"), gbc);
-        gbc.gridx = 1; add(weightField, gbc);
+        // Sender
+        gbc.gridx = 0; gbc.gridy = 1; add(new JLabel("Sender name:"), gbc);
+        gbc.gridx = 1; add(senderField, gbc);
+
+        // Description
+        gbc.gridx = 0; gbc.gridy = 2; add(new JLabel("Description:"), gbc);
+        gbc.gridx = 1; add(descriptionField, gbc);
 
         // Image
-        gbc.gridx = 0; gbc.gridy = 2; add(new JLabel("Image:"), gbc);
+        gbc.gridx = 0; gbc.gridy = 3; add(new JLabel("Image:"), gbc);
         gbc.gridx = 1; add(chooseImgBtn, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         imgPreview.setPreferredSize(new Dimension(150, 100));
         imgPreview.setBorder(BorderFactory.createEtchedBorder());
         add(imgPreview, gbc);
@@ -91,7 +101,9 @@ public class NotifyCustomerDialog extends JDialog {
                 System.out.println("made it here");
 
                 // Emailer
-                Emailer.sendEmailWithAttachment(selectedImage, selectedImage.getName(), selectedCustomer.getEmail());
+                // Emailer.sendEmailWithAttachment(selectedImage, selectedImage.getName(), selectedCustomer.getEmail());
+                controller.onNotifyButtonPressed(selectedCustomer.getId(), senderField.getText(), descriptionField.getText(), selectedImage, "temporary type");
+
                 JOptionPane.showMessageDialog(this, "Email sent successfully!");
             } catch (Exception ex) {
                 ex.printStackTrace();
